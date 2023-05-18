@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import ingredient.IngredientList;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
@@ -26,10 +27,15 @@ public class GetOrderTests {
     private final UserClient userClient = new UserClient();
     private final Order order = new Order();
     private UserResponse userResponse;
+    private final Faker faker = new Faker();
 
     @Before
     public void setUp() {
-        UserRequest userRequest = UserRequest.generate();
+        UserRequest userRequest = new UserRequest(
+                faker.internet().emailAddress(),
+                faker.internet().password(),
+                faker.name().firstName()
+        );
 
         userClient.userCreate(userRequest);
         userResponse = userClient.userLogin(userRequest).body()

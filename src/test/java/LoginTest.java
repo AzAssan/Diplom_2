@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
@@ -16,11 +17,17 @@ import static org.junit.Assert.*;
 public class LoginTest {
 
         private final UserClient userClient = new UserClient();
-        private final UserRequest userRequest = UserRequest.generate();
+        private UserRequest userRequest;
+        private final Faker faker = new Faker();
         private UserResponse userCreationResponse;
 
         @Before
         public void setUp() {
+            userRequest = new UserRequest(
+                    faker.internet().emailAddress(),
+                    faker.internet().password(),
+                    faker.name().firstName()
+            );
             userCreationResponse = userClient.userCreate(userRequest)
                     .body()
                     .as(UserResponse.class);

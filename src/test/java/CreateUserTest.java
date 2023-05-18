@@ -1,6 +1,8 @@
+import com.github.javafaker.Faker;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.After;
+import org.junit.Before;
 import user.UserCreds;
 import user.UserRequest;
 import user.UserResponse;
@@ -12,9 +14,19 @@ import static org.junit.Assert.*;
 
 public class CreateUserTest {
     private final UserClient userClient = new UserClient();
-    private final UserRequest userRequest = UserRequest.generate();
+    private UserRequest userRequest;
     private UserResponse userCreationResponse;
 
+    private final Faker faker = new Faker();
+
+    @Before
+    public void setUp() {
+        userRequest = new UserRequest(
+                faker.internet().emailAddress(),
+                faker.internet().password(),
+                faker.name().firstName()
+        );
+    }
 
     @Test
     @DisplayName("200 ОК: create unique user")

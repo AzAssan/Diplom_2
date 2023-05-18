@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import user.*;
+import com.github.javafaker.Faker;
 
 import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
@@ -13,12 +14,17 @@ public class ChangeUserDataTest {
     private final UserClient userClient = new UserClient();
     private User user;
     private UserCreds userCreds;
+    private final Faker faker = new Faker();
 
 
     @Before
     public void setUp() {
 
-        UserRequest userRequest = UserRequest.generate();
+        UserRequest userRequest = new UserRequest(
+                faker.internet().emailAddress(),
+                faker.internet().password(),
+                faker.name().firstName()
+        );
         userClient.userCreate(userRequest);
 
         user = new User(userRequest.getEmail(), userRequest.getName());
@@ -30,7 +36,7 @@ public class ChangeUserDataTest {
     @DisplayName("200 OK: successful change user email")
     public void testUpdateUserWithAuthorization() {
 
-        user.setEmail(UserRequest.generate().getEmail());
+        user.setEmail(faker.internet().emailAddress());
         userClient.userChange(user, userCreds)
                 .then()
                 .assertThat()
@@ -46,7 +52,7 @@ public class ChangeUserDataTest {
     @Test
     @DisplayName("200 OK: successful change user name")
     public void successfulChangeUserName() {
-        user.setName(UserRequest.generate().getName());
+        user.setName(faker.name().firstName());
         userClient.userChange(user, userCreds)
                 .then()
                 .assertThat()
@@ -64,7 +70,7 @@ public class ChangeUserDataTest {
     @DisplayName("401 Unauthorized: should be authorised")
     public void testChangeUserDataWithoutAuthorization() {
         // try to change user data without token
-        user.setEmail(UserRequest.generate().getEmail());
+        user.setEmail(faker.internet().emailAddress());
 
         Response response = userClient.userChange(user, new UserCreds("Bearer ", "test token"));
         response.then().statusCode(SC_UNAUTHORIZED);

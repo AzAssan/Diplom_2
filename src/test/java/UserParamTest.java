@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import org.junit.Test;
@@ -15,6 +16,7 @@ public class UserParamTest {
         private final String email;
         private final String password;
         private final String name;
+        private static final Faker faker = new Faker();
 
         private final UserClient userClient;
 
@@ -28,9 +30,9 @@ public class UserParamTest {
         @Parameterized.Parameters(name = "Creating user with parameters: email: {0}, password: {1}, name: {2}")
         public static Object[][] data() {
             return new Object[][]{
-                    {null, UserRequest.generate().getPassword(), UserRequest.generate().getName()},
-                    {UserRequest.generate().getEmail(), null, UserRequest.generate().getName()},
-                    {UserRequest.generate().getEmail(), UserRequest.generate().getPassword(), null}
+                    {null, faker.internet().password(), faker.name().firstName()},
+                    {faker.internet().emailAddress(), null, faker.name().firstName()},
+                    {faker.internet().emailAddress(), faker.internet().password(), null}
             };
         }
 

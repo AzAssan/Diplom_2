@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
@@ -23,9 +24,15 @@ public class OrderCreateTest {
     private final Order order = new Order();
     private UserResponse userResponse;
 
+    private final Faker faker = new Faker();
+
     @Before
     public void setUp() {
-        UserRequest userRequest = UserRequest.generate();
+        UserRequest userRequest = new UserRequest(
+                faker.internet().emailAddress(),
+                faker.internet().password(),
+                faker.name().firstName()
+        );
         userClient.userCreate(userRequest);
         userResponse = userClient.userLogin(userRequest).body()
                 .as(UserResponse.class);
