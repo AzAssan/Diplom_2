@@ -1,6 +1,5 @@
 import com.github.javafaker.Faker;
 import ingredient.IngredientList;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import order.OrderRequest;
@@ -70,7 +69,6 @@ public class GetOrderTests {
         assertEquals("You should be authorised", generalResponse.getMessage());
     }
 
-    @Step("get random ingredients list")
     private List<String> getRandomIngredients() {
         List<String> ingredients = new ArrayList<>();
         Random random = new Random();
@@ -82,7 +80,6 @@ public class GetOrderTests {
         return ingredients;
     }
 
-    @Step("create order")
     private OrderResponse getOrderResponse(List<String> orderIngredients) {
         return order
                 .orderCreate(new OrderRequest(orderIngredients), UserCreds.getCredsFrom(userResponse))

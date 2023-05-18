@@ -1,5 +1,4 @@
 import com.github.javafaker.Faker;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import ingredient.IngredientList;
@@ -77,7 +76,6 @@ public class OrderCreateTest {
         response.then().assertThat().statusCode(SC_INTERNAL_SERVER_ERROR);
     }
 
-    @Step("get random ingredients list")
     private List<String> getRandomIngredients() {
         List<String> ingredients = new ArrayList<>();
         Random random = new Random();
